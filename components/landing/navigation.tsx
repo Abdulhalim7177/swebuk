@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { AuthButtonClient } from "@/components/auth-button-client";
-import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { Code2, Menu, X } from "lucide-react";
 
@@ -39,7 +38,6 @@ export function Navigation() {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-4">
-            <ThemeToggle />
             <AuthButtonClient />
 
             {/* Mobile menu button */}

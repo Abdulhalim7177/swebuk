@@ -1,25 +1,51 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Users, Code, Calendar, BookOpen, Trophy, Zap } from 'lucide-react';
 
 export function HeroSection() {
-  const [mounted, setMounted] = useState(false);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <motion.section
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-0"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-900" />
 
-      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+      <motion.div
+        className="relative z-10 text-center px-4 max-w-6xl mx-auto"
+        variants={containerVariants}
+      >
         {/* Animated badges */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8 animate-fade-in">
+        <motion.div
+          className="flex flex-wrap justify-center gap-2 mb-8"
+          variants={itemVariants}
+        >
           <Badge variant="secondary" className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/30 transition-all duration-300 animate-pulse-slow">
             <Users className="w-3 h-3 mr-1" />
             500+ Students
@@ -32,24 +58,36 @@ export function HeroSection() {
             <Calendar className="w-3 h-3 mr-1" />
             20+ Events
           </Badge>
-        </div>
+        </motion.div>
 
         {/* Main heading */}
-        <h1 className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <motion.h1
+          className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent"
+          variants={itemVariants}
+        >
           SWEBUK
-        </h1>
+        </motion.h1>
 
-        <h2 className={`text-2xl md:text-3xl font-semibold mb-4 text-gray-300 transition-all duration-1000 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <motion.h2
+          className="text-2xl md:text-3xl font-semibold mb-4 text-gray-300"
+          variants={itemVariants}
+        >
           Software Engineering Student Community
-        </h2>
+        </motion.h2>
 
-        <p className={`text-lg md:text-xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <motion.p
+          className="text-lg md:text-xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed"
+          variants={itemVariants}
+        >
           Connect, collaborate, and innovate with fellow software engineering students.
           Join clusters, work on projects, attend events, and build your portfolio in our vibrant tech ecosystem.
-        </p>
+        </motion.p>
 
         {/* CTA Buttons */}
-        <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-12 transition-all duration-1000 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+          variants={itemVariants}
+        >
           <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 text-lg group">
             Get Started
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -57,10 +95,13 @@ export function HeroSection() {
           <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white px-8 py-3 text-lg">
             Explore Features
           </Button>
-        </div>
+        </motion.div>
 
         {/* Feature highlights */}
-        <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto transition-all duration-1000 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+          variants={itemVariants}
+        >
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:scale-105">
             <div className="bg-indigo-500/20 rounded-full w-12 h-12 flex items-center justify-center mb-4 mx-auto">
               <Users className="w-6 h-6 text-indigo-400" />
@@ -84,8 +125,8 @@ export function HeroSection() {
             <h3 className="text-white font-semibold mb-2">FYP Management</h3>
             <p className="text-gray-400 text-sm">Complete your final year project with expert guidance</p>
           </div>
-        </div>
-      </div>
-    </section>
+        </motion.div>
+      </motion.div>
+    </motion.section>
   );
 }

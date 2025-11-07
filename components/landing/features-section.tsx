@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   Users,
@@ -105,62 +106,89 @@ const features = [
 ];
 
 export function FeaturesSection() {
-  const [mounted, setMounted] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
 
   return (
-    <section className="py-20 relative">
+    <section className="py-20 relative" ref={ref}>
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/95 to-slate-900" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4">
-        <div className={`text-center mb-16 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Everything You Need to Excel
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             A comprehensive platform designed specifically for software engineering students to collaborate, learn, and grow together.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={feature.title}
-              className={`group relative transition-all duration-700 delay-${index * 100} ${
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              variants={itemVariants}
             >
-              <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl blur-xl"
-                   style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))` }} />
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl blur-xl"
+                     style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))` }} />
 
-              <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:from-white/15 hover:to-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/10 group-hover:border-white/30">
-                {/* Badge */}
-                <div className="flex items-center justify-between mb-4">
-                  <Badge variant="secondary" className="text-xs bg-white/10 text-gray-300 border-white/20">
-                    {feature.badge}
-                  </Badge>
+                <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:from-white/15 hover:to-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/10 group-hover:border-white/30">
+                  {/* Badge */}
+                  <div className="flex items-center justify-between mb-4">
+                    <Badge variant="secondary" className="text-xs bg-white/10 text-gray-300 border-white/20">
+                      {feature.badge}
+                    </Badge>
+                  </div>
+
+                  {/* Icon */}
+                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className="w-6 h-6 text-white" />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-white font-semibold mb-2 group-hover:text-white/90 transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-
-                {/* Icon */}
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-
-                {/* Content */}
-                <h3 className="text-white font-semibold mb-2 group-hover:text-white/90 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -79,31 +79,3 @@ System Flow
 3. Final-year students access the FYP module to propose and track their projects.
 4. Supervisors review and provide feedback.
 5. Administrators oversee the full system through analytics dashboards.
-
-
-Database Schema
-The following database schema defines the core structure of the Swebuk system, including tables, relationships, and key entities. It is designed for implementation in Supabase or a relational database such as PostgreSQL or MySQL.
-users
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiernameVARCHAR(150)Full nameemailVARCHAR(150)Unique emailpasswordVARCHAR(255)Hashed passwordroleENUM('student','staff','admin','lead','manager')User rolelevelINTStudent academic level (100,200,300,400)profile_imageVARCHAR(255)Profile picture URLbioTEXTShort user bio
-clusters
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiernameVARCHAR(100)Cluster namedescriptionTEXTCluster detailsmanager_idFK ? users(id)Staff managerlead_student_idFK ? users(id)Lead student
-cluster_members
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiercluster_idFK ? clusters(id)Cluster referenceuser_idFK ? users(id)Student referencestatusENUM('pending','approved','rejected')Membership status
-projects
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiercluster_idFK ? clusters(id)Related clustertitleVARCHAR(150)Project titledescriptionTEXTProject detailscreated_byFK ? users(id)CreatorstatusENUM('pending','approved','in_progress','completed')Project status
-project_members
-FieldTypeDescriptionidUUID / INT (PK)Unique identifierproject_idFK ? projects(id)Project referenceuser_idFK ? users(id)Student referenceroleENUM('member','lead')Project role
-final_year_projects
-FieldTypeDescriptionidUUID / INT (PK)Unique identifierstudent_idFK ? users(id)Final-year studentsupervisor_idFK ? users(id)SupervisortitleVARCHAR(150)Project titledescriptionTEXTSummarydocument_urlVARCHAR(255)File URLstatusENUM('pending','approved','in_progress','completed')Project status
-events
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiertitleVARCHAR(150)Event namedescriptionTEXTDetailsdateDATEEvent datecluster_idFK ? clusters(id)Cluster referencecreated_byFK ? users(id)Creator
-blogs
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiertitleVARCHAR(150)Blog titlecontentTEXTContent bodyauthor_idFK ? users(id)Authorcluster_idFK ? clusters(id)Tagged cluster
-comments
-FieldTypeDescriptionidUUID / INT (PK)Unique identifierblog_idFK ? blogs(id)Blog referenceuser_idFK ? users(id)CommentercontentTEXTComment body
-notifications
-FieldTypeDescriptionidUUID / INT (PK)Unique identifierrecipient_idFK ? users(id)Receiversender_idFK ? users(id)SendermessageTEXTMessage content
-chats
-FieldTypeDescriptionidUUID / INT (PK)Unique identifiertypeENUM('cluster','project','fyp')Chat contextreference_idINTLinked entitysender_idFK ? users(id)SendermessageTEXTChat message
-audit_trails
-FieldTypeDescriptionidUUID / INT (PK)Unique identifieruser_idFK ? users(id)User referenceactionVARCHAR(255)Action descriptionentityVARCHAR(100)Affected table

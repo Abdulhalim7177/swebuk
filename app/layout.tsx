@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "SWEBUK - Software Engineering Student Community",
   description: "Connect, collaborate, and innovate with fellow software engineering students. Join clusters, work on projects, attend events, and build your portfolio.",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 const geistSans = Geist({
