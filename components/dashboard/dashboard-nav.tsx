@@ -144,17 +144,17 @@ export function DashboardNav({ user }: DashboardNavProps) {
   const navItems = getNavItems();
 
   return (
-    <nav className="fixed left-0 top-0 z-50 w-64 h-screen bg-white border-r border-gray-200 lg:block hidden">
+    <nav className="fixed left-0 top-0 z-50 w-64 h-screen bg-card border-r border-border lg:block hidden">
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-border">
           <Link href="/dashboard" className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
               <LayoutDashboard className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">SWEBUK</h1>
-              <p className="text-xs text-gray-500 capitalize">{userRole} Dashboard</p>
+              <h1 className="text-lg font-bold text-foreground">SWEBUK</h1>
+              <p className="text-xs text-muted-foreground capitalize">{userRole} Dashboard</p>
             </div>
           </Link>
         </div>
@@ -182,19 +182,19 @@ export function DashboardNav({ user }: DashboardNavProps) {
         </div>
 
         {/* User Section */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-border">
           <div className="space-y-3">
             {/* Theme Selector */}
             <div className="px-3 py-2">
-              <p className="text-xs font-medium text-gray-700 mb-2">Theme</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">Theme</p>
               <ThemeSelector />
             </div>
 
             <div className="px-3 py-2 text-sm">
-              <p className="font-medium text-gray-900 truncate">
+              <p className="font-medium text-foreground truncate">
                 {user.email}
               </p>
-              <p className="text-xs text-gray-500 capitalize">
+              <p className="text-xs text-muted-foreground capitalize">
                 {userRole}
               </p>
             </div>
@@ -210,7 +210,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="w-full justify-start text-destructive hover:text-destructive-foreground hover:bg-destructive"
                 onClick={() => setShowLogoutModal(true)}
               >
                 <LogOut className="w-4 h-4 mr-2" />

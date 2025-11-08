@@ -147,7 +147,7 @@ export function MobileDashboardNav({ user }: MobileDashboardNavProps) {
           variant="outline"
           size="sm"
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-white shadow-md"
+          className="bg-card shadow-md"
         >
           {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </Button>
@@ -156,18 +156,18 @@ export function MobileDashboardNav({ user }: MobileDashboardNavProps) {
       {/* Mobile Navigation Overlay */}
       {isOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setIsOpen(false)}>
-          <div className="fixed left-0 top-0 w-64 h-full bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed left-0 top-0 w-64 h-full bg-card shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="p-6 border-b border-gray-200">
+              <div className="p-6 border-b border-border">
                 <div className="flex items-center justify-between">
                   <Link href="/dashboard" className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
                       <LayoutDashboard className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h1 className="text-lg font-bold text-gray-900">SWEBUK</h1>
-                      <p className="text-xs text-gray-500 capitalize">{userRole} Dashboard</p>
+                      <h1 className="text-lg font-bold text-foreground">SWEBUK</h1>
+                      <p className="text-xs text-muted-foreground capitalize">{userRole} Dashboard</p>
                     </div>
                   </Link>
                   <Button
@@ -204,13 +204,13 @@ export function MobileDashboardNav({ user }: MobileDashboardNavProps) {
               </div>
 
               {/* User Section */}
-              <div className="p-4 border-t border-gray-200">
+              <div className="p-4 border-t border-border">
                 <div className="space-y-3">
                   <div className="px-3 py-2 text-sm">
-                    <p className="font-medium text-gray-900 truncate">
+                    <p className="font-medium text-foreground truncate">
                       {user.email}
                     </p>
-                    <p className="text-xs text-gray-500 capitalize">
+                    <p className="text-xs text-muted-foreground capitalize">
                       {userRole}
                     </p>
                   </div>
@@ -226,7 +226,7 @@ export function MobileDashboardNav({ user }: MobileDashboardNavProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="w-full justify-start text-destructive hover:text-destructive-foreground hover:bg-destructive"
                       onClick={handleLogout}
                     >
                       <LogOut className="w-4 h-4 mr-2" />
