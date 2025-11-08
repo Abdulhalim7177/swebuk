@@ -54,11 +54,21 @@ export function TopNav({ user, onMenuClick }: TopNavProps) {
           </Button>
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
-            <Link href="/dashboard" className="rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-hover">Dashboard</Link>
-            <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Users</Link>
-            <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Clubs</Link>
-            <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Events</Link>
-            <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Analytics</Link>
+            {["admin", "staff"].includes(userRole.toLowerCase()) ? (
+              <>
+                <Link href="/dashboard" className="rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-hover">Dashboard</Link>
+                <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Clubs</Link>
+                <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Events</Link>
+              </>
+            ) : (
+              <>
+                <Link href="/dashboard" className="rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-hover">Dashboard</Link>
+                <Link href="/dashboard/portfolio" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Portfolio</Link>
+                <Link href="/dashboard/projects" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Projects</Link>
+                <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Clubs</Link>
+                <Link href="#" className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-hover hover:text-foreground">Events</Link>
+              </>
+            )}
           </nav>
         </div>
 

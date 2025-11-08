@@ -96,7 +96,9 @@ export function StudentDashboard({ user }: StudentDashboardProps) {
                           <p className="mt-2 text-sm text-foreground/80">{club.description}</p>
                           <div className="mt-4 flex items-center justify-between">
                             <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${club.tagBg}`}>{club.tag}</span>
-                            <a href="#" className="text-sm font-medium text-primary hover:underline">Join</a>
+                            <Button variant="outline" size="sm" asChild className="border-blue-500 text-blue-500 hover:bg-blue-500/10 hover:text-blue-500">
+                              <Link href="#">Join</Link>
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -125,7 +127,9 @@ export function StudentDashboard({ user }: StudentDashboardProps) {
                           <span key={i} className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{tag}</span>
                         ))}
                       </div>
-                      <a href="#" className="text-sm font-medium text-primary hover:underline">View Project</a>
+                      <Button variant="outline" size="sm" asChild className="border-blue-500 text-blue-500 hover:bg-blue-500/10 hover:text-blue-500">
+                        <Link href="#">View Project</Link>
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
