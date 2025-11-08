@@ -44,7 +44,15 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        hover: "hsl(var(--hover))",
+        green: {
+          "500": "#22c55e",
+        },
+        purple: {
+          "500": "#a855f7",
+        },
+        orange: {
+          "500": "#f97316",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -81,6 +81,22 @@ export function DashboardNav({ user, isSidebarOpen, setIsSidebarOpen }: Dashboar
     }
   };
 
+  const getDashboardTitle = () => {
+    switch (userRole.toLowerCase()) {
+      case "admin":
+        return "Admin Panel";
+      case "staff":
+        return "Staff Panel";
+      case "lead":
+        return "Lead Dashboard";
+      case "deputy":
+        return "Deputy Dashboard";
+      case "student":
+      default:
+        return "Student Dashboard";
+    }
+  };
+
   const navSections = getNavSections();
 
   const NavContent = () => (
@@ -89,9 +105,9 @@ export function DashboardNav({ user, isSidebarOpen, setIsSidebarOpen }: Dashboar
       <div className="p-4 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <ShieldCheck className="h-5 w-5" />
+            <ShieldCheck className="h-6 w-6" />
           </div>
-          <span className="text-xl font-bold text-foreground">Admin Panel</span>
+          <span className="text-xl font-bold text-foreground">{getDashboardTitle()}</span>
         </Link>
       </div>
 
@@ -114,7 +130,7 @@ export function DashboardNav({ user, isSidebarOpen, setIsSidebarOpen }: Dashboar
                       : "text-muted-foreground hover:bg-hover hover:text-foreground"
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-6 w-6" />
                   <span>{item.label}</span>
                 </Link>
               );

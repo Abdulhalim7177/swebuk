@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
 import { Users2, Code2, CalendarCheck, GitCommit, Palette, Brain, Server, CloudCog } from "lucide-react";
+import Link from "next/link";
 
 interface StudentDashboardProps {
   user: User;
@@ -9,17 +10,17 @@ interface StudentDashboardProps {
 
 export function StudentDashboard({ user }: StudentDashboardProps) {
   const stats = [
-    { title: "My Clubs", value: "3", icon: Users2, iconBg: "bg-blue-100 text-blue-600" },
-    { title: "Active Projects", value: "5", icon: Code2, iconBg: "bg-green-100 text-green-600" },
-    { title: "Upcoming Events", value: "2", icon: CalendarCheck, iconBg: "bg-purple-100 text-purple-600" },
-    { title: "Contributions", value: "47", icon: GitCommit, iconBg: "bg-orange-100 text-orange-600" },
+    { title: "My Clubs", value: "3", icon: Users2, iconBg: "bg-primary/10 text-primary" },
+    { title: "Active Projects", value: "5", icon: Code2, iconBg: "bg-green-500/10 text-green-500" },
+    { title: "Upcoming Events", value: "2", icon: CalendarCheck, iconBg: "bg-purple-500/10 text-purple-500" },
+    { title: "Contributions", value: "47", icon: GitCommit, iconBg: "bg-orange-500/10 text-orange-500" },
   ];
 
   const clubs = [
-    { title: "Frontend Club", members: 245, description: "Learn React, Vue, Angular and modern web development.", tag: "Web Development", icon: Palette, iconBg: "bg-blue-100 text-blue-600", tagBg: "bg-blue-50 text-blue-600" },
-    { title: "AI/ML Club", members: 189, description: "Explore machine learning, deep learning and AI projects.", tag: "Artificial Intelligence", icon: Brain, iconBg: "bg-green-100 text-green-600", tagBg: "bg-green-50 text-green-600" },
-    { title: "Backend Club", members: 167, description: "Master Node.js, Python, databases and server architecture.", tag: "Backend Development", icon: Server, iconBg: "bg-purple-100 text-purple-600", tagBg: "bg-purple-50 text-purple-600" },
-    { title: "DevOps Club", members: 134, description: "Learn Docker, Kubernetes, CI/CD and cloud platforms.", tag: "DevOps", icon: CloudCog, iconBg: "bg-orange-100 text-orange-600", tagBg: "bg-orange-50 text-orange-600" },
+    { title: "Frontend Club", members: 245, description: "Learn React, Vue, Angular and modern web development.", tag: "Web Development", icon: Palette, iconBg: "bg-primary/10 text-primary", tagBg: "bg-primary/10 text-primary" },
+    { title: "AI/ML Club", members: 189, description: "Explore machine learning, deep learning and AI projects.", tag: "Artificial Intelligence", icon: Brain, iconBg: "bg-green-500/10 text-green-500", tagBg: "bg-green-500/10 text-green-500" },
+    { title: "Backend Club", members: 167, description: "Master Node.js, Python, databases and server architecture.", tag: "Backend Development", icon: Server, iconBg: "bg-purple-500/10 text-purple-500", tagBg: "bg-purple-500/10 text-purple-500" },
+    { title: "DevOps Club", members: 134, description: "Learn Docker, Kubernetes, CI/CD and cloud platforms.", tag: "DevOps", icon: CloudCog, iconBg: "bg-orange-500/10 text-orange-500", tagBg: "bg-orange-500/10 text-orange-500" },
   ];
 
   const projects = [
@@ -37,10 +38,17 @@ export function StudentDashboard({ user }: StudentDashboardProps) {
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
-      <div>
-        <h1 className="text-3xl font-semibold text-foreground">Welcome back, {user.user_metadata.full_name || user.email}!</h1>
-        <p className="mt-1 text-muted-foreground">Here's what's happening in your development community today.</p>
-      </div>
+      <Card className="bg-gradient-to-r from-primary/80 to-primary text-primary-foreground p-6">
+        <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold">Welcome back, {user.user_metadata.full_name || user.email}!</h1>
+            <p className="text-sm text-primary-foreground/80">Here's what's happening in your development community today.</p>
+          </div>
+          <Button variant="secondary" asChild className="self-start md:self-auto">
+            <Link href="/profile">View Profile</Link>
+          </Button>
+        </div>
+      </Card>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -135,7 +143,7 @@ export function StudentDashboard({ user }: StudentDashboardProps) {
             <CardContent className="space-y-5">
               {events.map((event, index) => (
                 <div key={index} className="flex gap-4">
-                  <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <span className="text-xs font-medium">{event.day}</span>
                     <span className="text-lg font-bold">{event.date}</span>
                   </div>

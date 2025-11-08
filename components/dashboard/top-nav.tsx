@@ -13,10 +13,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { LogoutModal } from "@/components/logout-modal";
 
 interface TopNavProps {
   user: User;
@@ -27,14 +31,22 @@ export function TopNav({ user, onMenuClick }: TopNavProps) {
   const userRole = user.user_metadata?.role || "student";
   const router = useRouter();
   const supabase = createClient();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLogoutPopoverOpen, setIsLogoutPopoverOpen] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await supabase.auth.signOut();
-    setShowLogoutModal(false);
     router.push("/");
+  };
+
+  const handlePopoverOpenChange = (open: boolean) => {
+    setIsLogoutPopoverOpen(open);
+    if (open) {
+      setTimeout(() => {
+        setIsLogoutPopoverOpen(false);
+      }, 7000);
+    }
   };
 
   return (
@@ -65,7 +77,7 @@ export function TopNav({ user, onMenuClick }: TopNavProps) {
         <div className="flex items-center gap-4">
           <ThemeSelector />
           <Button variant="ghost" size="icon" className="relative rounded-full">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-6 w-6" />
             <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
@@ -86,24 +98,39 @@ export function TopNav({ user, onMenuClick }: TopNavProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild className="focus:bg-hover">
                 <Link href="/profile">
-                  <Settings className="w-4 h-4 mr-2" />
+                  <Settings className="w-5 h-5 mr-2" />
                   Profile
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowLogoutModal(true)} className="text-destructive focus:bg-hover focus:text-destructive">
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </DropdownMenuItem>
+              <Popover open={isLogoutPopoverOpen} onOpenChange={handlePopoverOpenChange}>
+                <PopoverTrigger asChild>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="text-destructive focus:bg-hover focus:text-destructive"
+                  >
+                    <LogOut className="w-5 h-5 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Confirm Logout</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Are you sure you want to log out?
+                    </p>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setIsLogoutPopoverOpen(false)}>Cancel</Button>
+                      <Button variant="destructive" size="sm" onClick={handleLogout} disabled={isLoggingOut}>
+                        {isLoggingOut ? "Logging out..." : "Logout"}
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </header>
-      <LogoutModal
-        open={showLogoutModal}
-        onOpenChange={setShowLogoutModal}
-        onConfirm={handleLogout}
-        isLoading={isLoggingOut}
-      />
     </>
   );
 }

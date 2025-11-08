@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { User, LogIn, LayoutDashboard } from "lucide-react";
+import { User, LogIn, LayoutDashboard, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { ThemeSelector } from "@/components/theme-selector";
-import { LogoutModal } from "@/components/logout-modal";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export function AuthButtonClient() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLogoutPopoverOpen, setIsLogoutPopoverOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,8 +41,16 @@ export function AuthButtonClient() {
     const supabase = createClient();
     setIsLoggingOut(true);
     await supabase.auth.signOut();
-    setShowLogoutModal(false);
     router.push("/");
+  };
+
+  const handlePopoverOpenChange = (open: boolean) => {
+    setIsLogoutPopoverOpen(open);
+    if (open) {
+      setTimeout(() => {
+        setIsLogoutPopoverOpen(false);
+      }, 7000);
+    }
   };
 
   if (loading) {
@@ -55,37 +66,45 @@ export function AuthButtonClient() {
     return (
       <>
         <div className="flex items-center space-x-2">
-          <ThemeSelector />
           <Button variant="ghost" size="sm" asChild>
             <Link href="/dashboard" className="text-gray-300 hover:text-white">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Dashboard
             </Link>
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowLogoutModal(true)}
-            className="text-gray-300 border-gray-600 hover:text-white hover:bg-gray-700"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+          <Popover open={isLogoutPopoverOpen} onOpenChange={handlePopoverOpenChange}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-gray-300 border-gray-600 hover:text-white hover:bg-gray-700"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="space-y-4">
+                <h4 className="font-semibold">Confirm Logout</h4>
+                <p className="text-sm text-muted-foreground">
+                  Are you sure you want to log out?
+                </p>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setIsLogoutPopoverOpen(false)}>Cancel</Button>
+                  <Button variant="destructive" size="sm" onClick={handleLogout} disabled={isLoggingOut}>
+                    {isLoggingOut ? "Logging out..." : "Logout"}
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
-
-        <LogoutModal
-          open={showLogoutModal}
-          onOpenChange={setShowLogoutModal}
-          onConfirm={handleLogout}
-          isLoading={isLoggingOut}
-        />
       </>
     );
   }
 
   return (
     <div className="flex items-center space-x-2">
-      <ThemeSelector />
       <Button variant="ghost" size="sm" asChild>
         <Link href="/auth/login" className="text-gray-300 hover:text-white">
           <LogIn className="w-4 h-4 mr-2" />
