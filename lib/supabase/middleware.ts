@@ -47,11 +47,38 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+  // Redirect authenticated users away from auth pages to dashboard
+  if (
+    user &&
+    (
+      request.nextUrl.pathname.startsWith("/auth/login") ||
+      request.nextUrl.pathname.startsWith("/auth/sign-up") ||
+      request.nextUrl.pathname.startsWith("/auth/forgot-password") ||
+      request.nextUrl.pathname.startsWith("/auth/update-password") ||
+      request.nextUrl.pathname.startsWith("/auth/confirm") ||
+      request.nextUrl.pathname.startsWith("/auth/error") ||
+      request.nextUrl.pathname.startsWith("/auth/sign-up-success")
+    )
+  ) {
+    // User is trying to access auth pages while logged in, redirect to dashboard
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  // Redirect unauthenticated users away from protected routes
   if (
     request.nextUrl.pathname !== "/" &&
     !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
+    (
+      request.nextUrl.pathname.startsWith("/dashboard") ||
+      request.nextUrl.pathname.startsWith("/clusters") ||
+      request.nextUrl.pathname.startsWith("/projects") ||
+      request.nextUrl.pathname.startsWith("/fyp") ||
+      request.nextUrl.pathname.startsWith("/events") ||
+      request.nextUrl.pathname.startsWith("/blog/create") ||
+      request.nextUrl.pathname.startsWith("/admin")
+    )
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
