@@ -71,9 +71,9 @@ export function StudentDashboard({ user }: StudentDashboardProps) {
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-3">
         {/* Left Column (Clubs & Projects) */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-8 order-2 lg:order-none">
           {/* Popular Development Clubs */}
           <section>
             <div className="flex items-center justify-between">
@@ -135,7 +135,7 @@ export function StudentDashboard({ user }: StudentDashboardProps) {
         </div>
 
         {/* Right Column (Upcoming Events) */}
-        <aside className="lg:col-span-1">
+        <aside className="lg:col-span-1 order-1 lg:order-none">
           <Card>
             <CardHeader>
               <CardTitle>Upcoming Events</CardTitle>

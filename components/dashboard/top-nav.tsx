@@ -12,12 +12,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -32,21 +31,11 @@ export function TopNav({ user, onMenuClick }: TopNavProps) {
   const router = useRouter();
   const supabase = createClient();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [isLogoutPopoverOpen, setIsLogoutPopoverOpen] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await supabase.auth.signOut();
     router.push("/");
-  };
-
-  const handlePopoverOpenChange = (open: boolean) => {
-    setIsLogoutPopoverOpen(open);
-    if (open) {
-      setTimeout(() => {
-        setIsLogoutPopoverOpen(false);
-      }, 7000);
-    }
   };
 
   return (
@@ -102,31 +91,22 @@ export function TopNav({ user, onMenuClick }: TopNavProps) {
                   Profile
                 </Link>
               </DropdownMenuItem>
-              <Popover open={isLogoutPopoverOpen} onOpenChange={handlePopoverOpenChange}>
-                <PopoverTrigger asChild>
-                  <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
-                    className="text-destructive focus:bg-hover focus:text-destructive"
-                  >
-                    <LogOut className="w-5 h-5 mr-2" />
-                    Logout
-                  </DropdownMenuItem>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Confirm Logout</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Are you sure you want to log out?
-                    </p>
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setIsLogoutPopoverOpen(false)}>Cancel</Button>
-                      <Button variant="destructive" size="sm" onClick={handleLogout} disabled={isLoggingOut}>
-                        {isLoggingOut ? "Logging out..." : "Logout"}
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="text-destructive focus:text-destructive">
+                  <LogOut className="w-5 h-5 mr-2" />
+                  Logout
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuLabel>Are you sure?</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut} className="text-destructive focus:text-destructive">
+                      {isLoggingOut ? "Logging out..." : "Yes, logout"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>Cancel</DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

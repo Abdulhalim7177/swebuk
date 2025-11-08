@@ -16,7 +16,6 @@ export function AuthButtonClient() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [isLogoutPopoverOpen, setIsLogoutPopoverOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,15 +43,6 @@ export function AuthButtonClient() {
     router.push("/");
   };
 
-  const handlePopoverOpenChange = (open: boolean) => {
-    setIsLogoutPopoverOpen(open);
-    if (open) {
-      setTimeout(() => {
-        setIsLogoutPopoverOpen(false);
-      }, 7000);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center space-x-2">
@@ -72,7 +62,7 @@ export function AuthButtonClient() {
               Dashboard
             </Link>
           </Button>
-          <Popover open={isLogoutPopoverOpen} onOpenChange={handlePopoverOpenChange}>
+          <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -90,7 +80,7 @@ export function AuthButtonClient() {
                   Are you sure you want to log out?
                 </p>
                 <div className="flex justify-end gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setIsLogoutPopoverOpen(false)}>Cancel</Button>
+                  <Button variant="outline" size="sm">Cancel</Button>
                   <Button variant="destructive" size="sm" onClick={handleLogout} disabled={isLoggingOut}>
                     {isLoggingOut ? "Logging out..." : "Logout"}
                   </Button>
