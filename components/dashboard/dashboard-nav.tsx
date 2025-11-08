@@ -2,232 +2,147 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
 import {
   LayoutDashboard,
   Users,
   FileText,
   Calendar,
-  BookOpen,
   Settings,
-  LogOut,
-  GraduationCap,
-  Shield,
-  Database
+  ShieldCheck,
+  UserCog,
+  Users2,
+  CalendarCog,
+  FolderCheck,
+  GitPullRequest,
+  PieChart,
+  BarChart3,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-import { ThemeSelector } from "@/components/theme-selector";
-import { LogoutModal } from "@/components/logout-modal";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface DashboardNavProps {
   user: User;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isOpen: boolean) => void;
 }
 
-export function DashboardNav({ user }: DashboardNavProps) {
+export function DashboardNav({ user, isSidebarOpen, setIsSidebarOpen }: DashboardNavProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const supabase = createClient();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
   const userRole = user.user_metadata?.role || "student";
 
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    await supabase.auth.signOut();
-    setShowLogoutModal(false);
-    router.push("/");
-  };
+  const getNavSections = () => {
+    const studentNav = {
+      "Main": [
+        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/dashboard/profile", label: "My Profile", icon: Users },
+        { href: "/dashboard/portfolio", label: "Portfolio", icon: FileText },
+      ],
+      "Community": [
+        { href: "/dashboard/clusters", label: "All Clubs", icon: Users2 },
+        { href: "/dashboard/events", label: "Events", icon: Calendar },
+        { href: "/dashboard/projects", label: "Projects", icon: FolderCheck },
+      ],
+      "My Clubs": [
+        { href: "/dashboard/clusters/frontend", label: "Frontend Club", icon: () => <span className="h-2 w-2 rounded-full bg-blue-500" /> },
+        { href: "/dashboard/clusters/ai-ml", label: "AI/ML Club", icon: () => <span className="h-2 w-2 rounded-full bg-green-500" /> },
+      ],
+    };
 
-  const getNavItems = () => {
-    const baseItems = [
-      {
-        href: "/dashboard",
-        label: "Dashboard",
-        icon: LayoutDashboard,
-      },
-      {
-        href: "/clusters",
-        label: "Clusters",
-        icon: Users,
-      },
-      {
-        href: "/projects",
-        label: "Projects",
-        icon: FileText,
-      },
-      {
-        href: "/events",
-        label: "Events",
-        icon: Calendar,
-      },
-      {
-        href: "/blog",
-        label: "Blog",
-        icon: BookOpen,
-      },
-    ];
+    const adminNav = {
+      "Admin Panel": [
+        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/dashboard/admin/users", label: "User Management", icon: Users },
+        { href: "/dashboard/admin/staff", label: "Staff Management", icon: UserCog },
+      ],
+      "Content": [
+        { href: "/dashboard/clusters", label: "Club Management", icon: Users2 },
+        { href: "/dashboard/events", label: "Event Management", icon: CalendarCog },
+        { href: "/dashboard/projects", label: "Project Oversight", icon: FolderCheck },
+        { href: "/dashboard/repository", label: "Repository Control", icon: GitPullRequest },
+      ],
+      "System": [
+        { href: "/dashboard/analytics", label: "Analytics", icon: PieChart },
+        { href: "/dashboard/settings", label: "System Settings", icon: Settings },
+        { href: "/dashboard/reports", label: "Reports", icon: BarChart3 },
+      ],
+    };
 
-    const roleSpecificItems = [];
-
-    // Add role-specific navigation items
     switch (userRole.toLowerCase()) {
       case "admin":
-        roleSpecificItems.push(
-          {
-            href: "/admin/users",
-            label: "User Management",
-            icon: Users,
-          },
-          {
-            href: "/admin/settings",
-            label: "System Settings",
-            icon: Settings,
-          },
-          {
-            href: "/admin/database",
-            label: "Database",
-            icon: Database,
-          }
-        );
-        break;
+        return adminNav;
       case "staff":
-        roleSpecificItems.push(
-          {
-            href: "/fyp/supervision",
-            label: "FYP Supervision",
-            icon: GraduationCap,
-          },
-          {
-            href: "/assessment",
-            label: "Assessment",
-            icon: FileText,
-          }
-        );
-        break;
+        // Assuming staff has a similar but perhaps reduced set of admin-like privileges
+        return { "Content": adminNav.Content, "System": adminNav.System };
       case "lead":
-        roleSpecificItems.push(
-          {
-            href: "/clusters/manage",
-            label: "Manage Cluster",
-            icon: Users,
-          },
-          {
-            href: "/clusters/applications",
-            label: "Applications",
-            icon: Users,
-          }
-        );
-        break;
       case "deputy":
-        roleSpecificItems.push(
-          {
-            href: "/blog/review",
-            label: "Review Blog",
-            icon: BookOpen,
-          },
-          {
-            href: "/clusters/applications",
-            label: "Applications",
-            icon: Users,
-          }
-        );
-        break;
+      case "student":
+      default:
+        return studentNav;
     }
-
-    return [...baseItems, ...roleSpecificItems];
   };
 
-  const navItems = getNavItems();
+  const navSections = getNavSections();
+
+  const NavContent = () => (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="p-4 border-b border-border">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <ShieldCheck className="h-5 w-5" />
+          </div>
+          <span className="text-xl font-bold text-foreground">Admin Panel</span>
+        </Link>
+      </div>
+
+      {/* Navigation */}
+      <nav className="mt-4 flex-1 space-y-6 p-2">
+        {Object.entries(navSections).map(([sectionTitle, items]) => (
+          <div key={sectionTitle} className="space-y-1">
+            <h3 className="px-4 text-xs font-semibold uppercase text-muted-foreground">{sectionTitle}</h3>
+            {Array.isArray(items) && items.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-4 py-2.5 font-medium transition-all",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-hover hover:text-foreground"
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        ))}
+      </nav>
+    </div>
+  );
 
   return (
-    <nav className="fixed left-0 top-0 z-50 w-64 h-screen bg-card border-r border-border lg:block hidden">
-      <div className="flex flex-col h-full">
-        {/* Header */}
-        <div className="p-6 border-b border-border">
-          <Link href="/dashboard" className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <LayoutDashboard className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">SWEBUK</h1>
-              <p className="text-xs text-muted-foreground capitalize">{userRole} Dashboard</p>
-            </div>
-          </Link>
-        </div>
-
-        {/* Navigation */}
-        <div className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-
-            return (
-              <Button
-                key={item.href}
-                variant={isActive ? "default" : "ghost"}
-                className="w-full justify-start"
-                asChild
-              >
-                <Link href={item.href}>
-                  <Icon className="w-4 h-4 mr-3" />
-                  {item.label}
-                </Link>
-              </Button>
-            );
-          })}
-        </div>
-
-        {/* User Section */}
-        <div className="p-4 border-t border-border">
-          <div className="space-y-3">
-            {/* Theme Selector */}
-            <div className="px-3 py-2">
-              <p className="text-xs font-medium text-muted-foreground mb-2">Theme</p>
-              <ThemeSelector />
-            </div>
-
-            <div className="px-3 py-2 text-sm">
-              <p className="font-medium text-foreground truncate">
-                {user.email}
-              </p>
-              <p className="text-xs text-muted-foreground capitalize">
-                {userRole}
-              </p>
-            </div>
-
-            <div className="space-y-1">
-              <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                <Link href="/profile">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Profile Settings
-                </Link>
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-destructive hover:text-destructive-foreground hover:bg-destructive"
-                onClick={() => setShowLogoutModal(true)}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Logout Modal */}
-        <LogoutModal
-          open={showLogoutModal}
-          onOpenChange={setShowLogoutModal}
-          onConfirm={handleLogout}
-          isLoading={isLoggingOut}
-        />
-      </div>
-    </nav>
+    <>
+      {/* Mobile Sidebar */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden",
+          isSidebarOpen ? "block" : "hidden"
+        )}
+        onClick={() => setIsSidebarOpen(false)}
+      />
+      <aside
+        className={cn(
+          "fixed top-0 left-0 z-50 h-full w-64 shrink-0 flex-col overflow-y-auto border-r border-border bg-card transition-transform md:relative md:translate-x-0",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <NavContent />
+      </aside>
+    </>
   );
 }

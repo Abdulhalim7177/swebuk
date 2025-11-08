@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark" | "system";
+type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -25,38 +25,17 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    // Check for saved theme preference or default to system
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("theme") as Theme;
       if (saved) return saved;
-      return "system";
+      return "dark";
     }
-    return "system";
+    return "dark";
   });
 
   useEffect(() => {
     const root = window.document.documentElement;
-
-    const applyTheme = (theme: Theme) => {
-      if (theme === "system") {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-        root.classList.toggle("dark", systemTheme === "dark");
-      } else {
-        root.classList.toggle("dark", theme === "dark");
-      }
-    };
-
-    applyTheme(theme);
-
-    // Listen for system theme changes if using system theme
-    if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const handleChange = () => applyTheme(theme);
-      mediaQuery.addEventListener("change", handleChange);
-      return () => mediaQuery.removeEventListener("change", handleChange);
-    }
+    root.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {

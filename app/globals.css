@@ -24,6 +24,7 @@
     --input: 60 30% 90%;
     --ring: 265 89% 78%;
     --radius: 0.5rem;
+    --hover: 60 30% 93%;
   }
 
   .dark {
@@ -38,7 +39,7 @@
     --secondary: 225 27% 51%;
     --secondary-foreground: 60 30% 96%;
     --muted: 231 15% 28%;
-    --muted-foreground: 225 27% 51%;
+    --muted-foreground: 225 27% 71%;
     --accent: 326 100% 74%;
     --accent-foreground: 231 15% 18%;
     --destructive: 0 100% 67%;
@@ -46,6 +47,7 @@
     --border: 231 15% 28%;
     --input: 231 15% 28%;
     --ring: 265 89% 78%;
+    --hover: 231 15% 20%;
   }
 }
 

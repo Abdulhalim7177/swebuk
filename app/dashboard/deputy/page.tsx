@@ -18,12 +18,6 @@ export default async function DeputyDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <DeputyDashboard user={user} />
-        </div>
-      </div>
-    </div>
+    <DeputyDashboard user={user} />
   );
 }

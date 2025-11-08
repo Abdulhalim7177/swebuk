@@ -1,205 +1,165 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
-import { BookOpen, Users, FileText, Calendar, Award, Settings } from "lucide-react";
+import { Users2, Code2, CalendarCheck, GitCommit, Palette, Brain, Server, CloudCog } from "lucide-react";
 
 interface StudentDashboardProps {
   user: User;
 }
 
 export function StudentDashboard({ user }: StudentDashboardProps) {
-  const studentMetrics = {
-    joinedClusters: 2,
-    activeProjects: 3,
-    blogPosts: 2,
-    upcomingEvents: 1,
-  };
+  const stats = [
+    { title: "My Clubs", value: "3", icon: Users2, iconBg: "bg-blue-100 text-blue-600" },
+    { title: "Active Projects", value: "5", icon: Code2, iconBg: "bg-green-100 text-green-600" },
+    { title: "Upcoming Events", value: "2", icon: CalendarCheck, iconBg: "bg-purple-100 text-purple-600" },
+    { title: "Contributions", value: "47", icon: GitCommit, iconBg: "bg-orange-100 text-orange-600" },
+  ];
 
-  const quickActions = [
-    {
-      title: "Browse Clusters",
-      description: "Discover and join software engineering clubs",
-      icon: Users,
-      href: "/clusters",
-      color: "bg-blue-500",
-    },
-    {
-      title: "My Projects",
-      description: "Manage your personal and team projects",
-      icon: FileText,
-      href: "/projects",
-      color: "bg-green-500",
-    },
-    {
-      title: "Write Blog",
-      description: "Share your knowledge and experiences",
-      icon: BookOpen,
-      href: "/blog/create",
-      color: "bg-purple-500",
-    },
-    {
-      title: "Events",
-      description: "Register for upcoming workshops and events",
-      icon: Calendar,
-      href: "/events",
-      color: "bg-orange-500",
-    },
+  const clubs = [
+    { title: "Frontend Club", members: 245, description: "Learn React, Vue, Angular and modern web development.", tag: "Web Development", icon: Palette, iconBg: "bg-blue-100 text-blue-600", tagBg: "bg-blue-50 text-blue-600" },
+    { title: "AI/ML Club", members: 189, description: "Explore machine learning, deep learning and AI projects.", tag: "Artificial Intelligence", icon: Brain, iconBg: "bg-green-100 text-green-600", tagBg: "bg-green-50 text-green-600" },
+    { title: "Backend Club", members: 167, description: "Master Node.js, Python, databases and server architecture.", tag: "Backend Development", icon: Server, iconBg: "bg-purple-100 text-purple-600", tagBg: "bg-purple-50 text-purple-600" },
+    { title: "DevOps Club", members: 134, description: "Learn Docker, Kubernetes, CI/CD and cloud platforms.", tag: "DevOps", icon: CloudCog, iconBg: "bg-orange-100 text-orange-600", tagBg: "bg-orange-50 text-orange-600" },
+  ];
+
+  const projects = [
+    { title: "E-Commerce Platform", description: "Full-stack e-commerce solution with React and Node.js", tags: ["React", "Node.js", "+2 more"] },
+    { title: "Image Recognition AI", description: "Deep learning model for image classification and detection.", tags: ["Python", "TensorFlow", "+3 more"] },
+    { title: "DevOps Pipeline", description: "Automated CI/CD pipeline with Docker and Kubernetes", tags: ["Docker", "K8s", "+1 more"] },
+  ];
+  
+  const events = [
+      { day: "TOM", date: "25", title: "React Workshop", club: "Frontend Club", time: "Tomorrow, 2:00 PM" },
+      { day: "FRI", date: "27", title: "ML Model Deployment", club: "AI/ML Club", time: "Friday, 5:00 PM" },
+      { day: "MON", date: "30", title: "API Design Patterns", club: "Backend Club", time: "Next Monday, 3:00 PM" },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Student Dashboard</h1>
-            <p className="text-gray-600">Welcome back, {user.email}</p>
-          </div>
-          <Button variant="outline" size="sm">
-            <Settings className="w-4 h-4 mr-2" />
-            Profile Settings
-          </Button>
+    <div className="space-y-8">
+      {/* Welcome Header */}
+      <div>
+        <h1 className="text-3xl font-semibold text-foreground">Welcome back, {user.user_metadata.full_name || user.email}!</h1>
+        <p className="mt-1 text-muted-foreground">Here's what's happening in your development community today.</p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <Card key={index}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.iconBg}`}>
+                  <Icon className="h-6 w-6" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <span className="text-3xl font-semibold">{stat.value}</span>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Left Column (Clubs & Projects) */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Popular Development Clubs */}
+          <section>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Popular Development Clubs</h2>
+              <a href="#" className="text-sm font-medium text-primary hover:underline">View All</a>
+            </div>
+            <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2">
+              {clubs.map((club, index) => {
+                const Icon = club.icon;
+                return (
+                  <Card key={index}>
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-4">
+                        <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${club.iconBg}`}>
+                          <Icon className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold">{club.title}</h3>
+                          <p className="text-sm text-muted-foreground">{club.members} members</p>
+                          <p className="mt-2 text-sm text-foreground/80">{club.description}</p>
+                          <div className="mt-4 flex items-center justify-between">
+                            <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${club.tagBg}`}>{club.tag}</span>
+                            <a href="#" className="text-sm font-medium text-primary hover:underline">Join</a>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Featured Projects */}
+          <section>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Featured Projects</h2>
+              <a href="#" className="text-sm font-medium text-primary hover:underline">Browse All Projects</a>
+            </div>
+            <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2">
+              {projects.map((project, index) => (
+                <Card key={index} className={index === 2 ? "md:col-span-2" : ""}>
+                  <CardContent className="p-5">
+                    <h3 className="text-lg font-semibold">{project.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{project.description}</p>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        {project.tags.map((tag, i) => (
+                          <span key={i} className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{tag}</span>
+                        ))}
+                      </div>
+                      <a href="#" className="text-sm font-medium text-primary hover:underline">View Project</a>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* Right Column (Upcoming Events) */}
+        <aside className="lg:col-span-1">
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Events</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              {events.map((event, index) => (
+                <div key={index} className="flex gap-4">
+                  <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                    <span className="text-xs font-medium">{event.day}</span>
+                    <span className="text-lg font-bold">{event.date}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">{event.title}</h4>
+                    <p className="text-sm text-muted-foreground">{event.club}</p>
+                    <p className="text-sm text-muted-foreground">{event.time}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
+
+      {/* CTA Banner */}
+      <div className="mt-8 rounded-xl bg-primary p-6 text-primary-foreground md:p-8">
+        <h2 className="text-2xl font-semibold">Ready to start building?</h2>
+        <p className="mt-1 text-primary-foreground/80">Join a club, start a project, or contribute to existing repositories.</p>
+        <div className="mt-4 flex gap-4">
+          <Button variant="secondary">Start a Project</Button>
+          <Button variant="outline">Browse Clubs</Button>
         </div>
       </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Joined Clusters</CardTitle>
-            <Users className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{studentMetrics.joinedClusters}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-            <FileText className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{studentMetrics.activeProjects}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Blog Posts</CardTitle>
-            <BookOpen className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{studentMetrics.blogPosts}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
-            <Calendar className="h-4 w-4 text-orange-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{studentMetrics.upcomingEvents}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
-              Quickly access common features and activities
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {quickActions.map((action, index) => {
-              const Icon = action.icon;
-              return (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="w-full justify-start h-auto p-4"
-                  asChild
-                >
-                  <a href={action.href}>
-                    <div className={`w-10 h-10 rounded-lg ${action.color} flex items-center justify-center mr-4`}>
-                      <Icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-medium">{action.title}</div>
-                      <div className="text-sm text-gray-600">{action.description}</div>
-                    </div>
-                  </a>
-                </Button>
-              );
-            })}
-          </CardContent>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>
-              Your latest activities and updates
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Award className="w-5 h-5 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium">Completed React Fundamentals</p>
-                  <p className="text-xs text-gray-500">2 days ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Users className="w-5 h-5 text-green-500" />
-                <div>
-                  <p className="text-sm font-medium">Joined Web Development Cluster</p>
-                  <p className="text-xs text-gray-500">1 week ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <FileText className="w-5 h-5 text-purple-500" />
-                <div>
-                  <p className="text-sm font-medium">Created new project: Portfolio Website</p>
-                  <p className="text-xs text-gray-500">2 weeks ago</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Academic Progress */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Academic Progress</CardTitle>
-          <CardDescription>
-            Track your academic level and achievements
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">Level 200</div>
-              <p className="text-sm text-gray-600">Current Academic Level</p>
-            </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">3.7</div>
-              <p className="text-sm text-gray-600">Current GPA</p>
-            </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">12</div>
-              <p className="text-sm text-gray-600">Courses Completed</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
